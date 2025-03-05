@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import HeaderNav from "@/views/home/HeaderNavHome.vue";
-import SideBar from "@/views/home/SideBarHome.vue";
-import Books from "@/views/home/Books.vue";
+
+
+
 
 const selectedCategory = ref(null)  // 存储选中的分类
 

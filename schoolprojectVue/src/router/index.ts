@@ -1,5 +1,5 @@
 import {createRouter,createWebHistory} from 'vue-router'
-import Home from "../components/Home.vue";
+
 import Index from "../components/Index.vue";
 import Login from "../views/index/views/Login.vue";
 import Register from "../views/index/views/Register.vue";
@@ -35,11 +35,7 @@ let router = createRouter({
             path:'/',
             redirect:'/index'
         },
-        {
-            path:'/home',
-            component:Home,
 
-        },
     ]
 })
 export default router;
