@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tute.schoolproject.mapper.home.BorrowRecordsMapper">
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        br.id, br.bookId, br.borrowerId, br.borrowDate, br.returnDate,
+        b.bookName as bookName, u.UserName as borrowerName
+    </sql>
+
+    <!-- 添加借阅记录 -->
+    <insert id="insertBorrowRecord" parameterType="cn.edu.tute.schoolproject.entity.BorrowRecords" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO BorrowRecords (bookId, borrowerId, borrowDate)
+        VALUES (#{bookId}, #{borrowerId}, #{borrowDate})
+    </insert>
+
+    <!-- 更新归还日期 -->
+    <update id="updateReturnDate" parameterType="cn.edu.tute.schoolproject.entity.BorrowRecords">
+        UPDATE BorrowRecords 
+        SET returnDate = #{returnDate}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询用户的所有借阅记录 -->
+    <select id="getBorrowRecordsByUser" resultType="cn.edu.tute.schoolproject.entity.BorrowRecords">
+        SELECT <include refid="Base_Column_List" />
+        FROM BorrowRecords br
+        LEFT JOIN Books b ON br.bookId = b.id
+        LEFT JOIN Users u ON br.borrowerId = u.UserID
+        WHERE br.borrowerId = #{borrowerId}
+        ORDER BY br.borrowDate DESC
+    </select>
+
+    <!-- 查询用户未归还的借阅记录 -->
+    <select id="getUnreturnedRecords" resultType="cn.edu.tute.schoolproject.entity.BorrowRecords">
+        SELECT <include refid="Base_Column_List" />
+        FROM BorrowRecords br
+        LEFT JOIN Books b ON br.bookId = b.id
+        LEFT JOIN Users u ON br.borrowerId = u.UserID
+        WHERE br.borrowerId = #{borrowerId}
+        AND br.returnDate IS NULL
+        ORDER BY br.borrowDate DESC
+    </select>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tute.schoolproject.mapper.index.UsersMapper">
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        UserID as userId, UserName as userName, Password as password, 
+        UserType as userType, Age as age, Gender as gender,
+        PhoneNumber as phoneNumber, Email as email, Address as address,
+        CreatedAt as createdAt
+    </sql>
+
+    <!-- 插入新用户 -->
+    <insert id="insertUser" parameterType="cn.edu.tute.schoolproject.entity.Users" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO Users (UserName, Password, UserType, Age, Gender, PhoneNumber, Email, Address)
+        VALUES (#{userName}, #{password}, #{userType}, #{age}, #{gender}, #{phoneNumber}, #{email}, #{address})
+    </insert>
+
+    <!-- 根据用户ID查询用户 -->
+    <select id="getUserById" resultType="cn.edu.tute.schoolproject.entity.Users">
+        SELECT <include refid="Base_Column_List" />
+        FROM Users
+        WHERE UserID = #{userId}
+    </select>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="getUserByUsername" resultType="cn.edu.tute.schoolproject.entity.Users">
+        SELECT <include refid="Base_Column_List" />
+        FROM Users
+        WHERE UserName = #{userName}
+    </select>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="cn.edu.tute.schoolproject.entity.Users">
+        UPDATE Users
+        <set>
+            <if test="userName != null">UserName = #{userName},</if>
+            <if test="password != null">Password = #{password},</if>
+            <if test="userType != null">UserType = #{userType},</if>
+            <if test="age != null">Age = #{age},</if>
+            <if test="gender != null">Gender = #{gender},</if>
+            <if test="phoneNumber != null">PhoneNumber = #{phoneNumber},</if>
+            <if test="email != null">Email = #{email},</if>
+            <if test="address != null">Address = #{address}</if>
+        </set>
+        WHERE UserID = #{userId}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUser">
+        DELETE FROM Users WHERE UserID = #{userId}
+    </delete>
+
+    <!-- 查询所有用户 -->
+    <select id="getAllUsers" resultType="cn.edu.tute.schoolproject.entity.Users">
+        SELECT <include refid="Base_Column_List" />
+        FROM Users
+    </select>
+
+    <!-- 根据用户类型查询用户 -->
+    <select id="getUsersByType" resultType="cn.edu.tute.schoolproject.entity.Users">
+        SELECT <include refid="Base_Column_List" />
+        FROM Users
+        WHERE UserType = #{userType}
+    </select>
+</mapper> 
