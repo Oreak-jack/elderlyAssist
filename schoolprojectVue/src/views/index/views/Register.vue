@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { register } from '@/api/user'  // 改用封装的 API 函数
+import { register } from '@/api/userApi.ts'  // 改用封装的 API 函数
 
 const router = useRouter()
 const registerForm = ref({

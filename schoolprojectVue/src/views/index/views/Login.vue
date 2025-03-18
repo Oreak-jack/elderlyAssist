@@ -1,7 +1,7 @@
 <script setup>
 import {ref, watch} from 'vue'
 import { useRouter } from 'vue-router'
-import {login} from "@/api/user.js";
+import {login} from "@/api/userApi.ts";
 
 const router = useRouter()
 const response = ref(null)
