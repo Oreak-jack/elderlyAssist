@@ -4,7 +4,7 @@ import Index from "../components/Index.vue";
 import Login from "../views/index/views/Login.vue";
 import Register from "../views/index/views/Register.vue";
 import Introduce from "../views/index/views/Introduce.vue";
-import HomePage from "../views/home/HomePage.vue";
+import Home from "../components/Home.vue";
 
 
 let router = createRouter({
@@ -38,7 +38,7 @@ let router = createRouter({
         },
         {
             path:'/home',
-            component: HomePage
+            component: Home
         }
 
     ]
