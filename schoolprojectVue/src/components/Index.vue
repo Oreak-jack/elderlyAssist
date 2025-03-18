@@ -1,18 +1,3 @@
-<!--<template>-->
-<!--  &lt;!&ndash;  头部    &ndash;&gt;-->
-<!--  <header>-->
-<!--    <HeaderNav v-if="false"></HeaderNav>-->
-<!--  </header>-->
-<!--  &lt;!&ndash;  侧边栏（看情况加吧）   &ndash;&gt;-->
-<!--  <div >-->
-
-<!--  </div>-->
-<!--  &lt;!&ndash;  中心展示区域    &ndash;&gt;-->
-<!--  <main>-->
-<!--    <router-view></router-view>-->
-<!--  </main>-->
-
-<!--</template>-->
 
 <template>
   <div>

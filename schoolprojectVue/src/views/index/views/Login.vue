@@ -1,9 +1,11 @@
 <script setup>
 import {ref, watch} from 'vue'
 import { useRouter } from 'vue-router'
-import {login} from "@/api/userApi.ts";
+import {login} from "@/api/userApi.ts"
+import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter()
+const userStore = useUserStore()
 const response = ref(null)
 const loginForm = ref({
   phoneNumber: '',
@@ -49,8 +51,22 @@ watch(response,(newResponse) => {
   console.log('response 变化了：', newResponse);
   alert(newResponse.message)
   if (newResponse.success) {
-    console.log("接下来路由重定向");
-    router.push('/home')
+    // 保存用户信息到store
+    userStore.setUser(newResponse.data)
+    console.log("接下来路由重定向",newResponse.data.userType);
+    // 根据用户类型跳转到不同页面
+    if (newResponse.data.userType === '老人') {
+      console.log("正在执行老人跳转")
+      // 这里要添加延时，不然的话路由反应太快没有办法正确登录！！！！！
+      setTimeout(() => {
+        router.push('/elderly')
+      }, 100)
+    } else {
+      console.log("正在执行家人跳转")
+      setTimeout(() => {
+        router.push('/family')
+      }, 100)
+    }
   }
 })
 </script>

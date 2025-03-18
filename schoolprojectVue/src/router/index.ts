@@ -6,14 +6,17 @@ import Register from "../views/index/views/Register.vue";
 import Introduce from "../views/index/views/Introduce.vue";
 import Home from "../components/Home.vue";
 import Test from "../components/Test.vue";
+import Elderly from "../components/Elderly.vue";
+import Family from "../components/Family.vue";
+import {useUserStore} from "../stores/userStore";
 
-
-let router = createRouter({
+const router = createRouter({
     history: createWebHistory(),
     routes:[
         {
             path:'/index',
             component:Index,
+            meta: { requiresAuth: false }, // 需要登录
             children:[
                 {
                     path:'',
@@ -45,14 +48,24 @@ let router = createRouter({
         {
             path:'/test',
             component: Test
+        },
+        {
+            path:'/elderly',
+            component: Elderly,
+            meta: { requiresAuth: true }
+        },
+        {
+            path:'/family',
+            component: Family,
+            meta: { requiresAuth: true }
         }
 
     ]
 })
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem('token'); // 这里检查是否有登录凭证
-    if (to.meta.requiresAuth && !isAuthenticated) {
+    const userStore = useUserStore();
+    if (to.meta.requiresAuth && !userStore.isLoggedIn) {
         next('/index/login'); // 未登录，重定向到登录页
     } else {
         next(); // 继续跳转

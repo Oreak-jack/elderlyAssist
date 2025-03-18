@@ -49,9 +49,9 @@ onUnmounted(() => {
         <a href="#vision" @click="(e) => scrollToSection(e, 'vision')">愿景</a>
         <a href="#advantage" @click="(e) => scrollToSection(e, 'advantage')">竞争优势</a>
       </div>
-      <div class="auth-buttons" @click="handleLoginOrRegisterClick(true)">
-        <router-link to="/index/login" class="btn btn-login" >登录</router-link>
-        <router-link to="/index/register" class="btn btn-register">注册</router-link>
+      <div class="auth-buttons">
+        <router-link to="/index/login" class="btn btn-login" @click="handleLoginOrRegisterClick(true)">登录</router-link>
+        <router-link to="/index/register" class="btn btn-register" @click="handleLoginOrRegisterClick(true)">注册</router-link>
       </div>
     </nav>
   </header>
