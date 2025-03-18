@@ -4,6 +4,7 @@ import Index from "../components/Index.vue";
 import Login from "../views/index/views/Login.vue";
 import Register from "../views/index/views/Register.vue";
 import Introduce from "../views/index/views/Introduce.vue";
+import HomePage from "../views/home/HomePage.vue";
 
 
 let router = createRouter({
@@ -35,6 +36,10 @@ let router = createRouter({
             path:'/',
             redirect:'/index'
         },
+        {
+            path:'/home',
+            component: HomePage
+        }
 
     ]
 })

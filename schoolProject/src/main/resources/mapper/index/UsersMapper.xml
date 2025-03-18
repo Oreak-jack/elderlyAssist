@@ -62,4 +62,11 @@
         FROM Users
         WHERE UserType = #{userType}
     </select>
-</mapper> 
+    
+    <!-- 根据手机号查询用户 -->
+    <select id="getUserByPhoneNumber" resultType="cn.edu.tute.schoolproject.entity.Users">
+        SELECT <include refid="Base_Column_List" />
+        FROM Users
+        WHERE PhoneNumber = #{phoneNumber}
+    </select>
+</mapper>
