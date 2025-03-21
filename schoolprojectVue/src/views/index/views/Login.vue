@@ -30,18 +30,31 @@ const handleLogin = async () => {
 
 
 
-  const res = await login(loginData)
-  response.value = res
-  // alert(response);
-  // if (response.success) {
-  //   router.push('/')
-  // } else {
-  //   alert(response.message)
-  // }
-  console.log("下面是 watch 信息")
-
-
-  console.log('登录信息：', loginForm.value)
+  try {
+    const res = await login(loginData)
+    if (!res) {
+      alert('登录失败，请稍后重试')
+      return
+    }
+    response.value = res
+    
+    if (res.success) {
+      // 保存用户信息到 userStore
+      userStore.setUser(res.data)
+      
+      // 根据用户类型跳转到不同页面
+      if (res.data.userType === '老人') {
+        router.push('/elderly')
+      } else {
+        router.push('/family')
+      }
+    } else {
+      alert(res.message || '登录失败，请检查账号密码')
+    }
+  } catch (error) {
+    console.error('登录错误：', error)
+    alert('登录出错，请稍后重试')
+  }
 
 
 }
@@ -51,9 +64,11 @@ watch(response,(newResponse) => {
   console.log('response 变化了：', newResponse);
   alert(newResponse.message)
   if (newResponse.success) {
-    // 保存用户信息到store
+
+    // 保存用户信息到 userStore
     userStore.setUser(newResponse.data)
     console.log("接下来路由重定向",newResponse.data.userType);
+
     // 根据用户类型跳转到不同页面
     if (newResponse.data.userType === '老人') {
       console.log("正在执行老人跳转")
@@ -61,7 +76,7 @@ watch(response,(newResponse) => {
       setTimeout(() => {
         router.push('/elderly')
       }, 100)
-    } else {
+    } else{
       console.log("正在执行家人跳转")
       setTimeout(() => {
         router.push('/family')
