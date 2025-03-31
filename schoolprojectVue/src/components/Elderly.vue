@@ -14,6 +14,9 @@ const elderlyInfo = computed(() => store.getCurrentUser)
 //   console.log("elderlyInfo发生了变化：",elderlyInfo.value)
 // }
 
+// 从 remindersApi 中获取数据，然后将数据存储在 RemindersStore 中，
+// 由<RemindersElderly></RemindersElderly>展示，并更新
+
 </script>
 
 <template>
@@ -22,7 +25,7 @@ const elderlyInfo = computed(() => store.getCurrentUser)
   <HeaderElderly :elderly-info="elderlyInfo"></HeaderElderly>
   <main>
     <!-- 今日提醒（核心区） -->
-    <RemindersElderly></RemindersElderly>
+    <RemindersElderly :elderly-info="elderlyInfo"></RemindersElderly>
   </main>
   <!-- 健康数据（健康监测区） -->
   <HealthElderly></HealthElderly>

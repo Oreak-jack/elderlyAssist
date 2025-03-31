@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tute.schoolproject.mapper.reminders.RemindersMapper">
+    <resultMap id="ReminderMap" type="cn.edu.tute.schoolproject.entity.Reminders">
+        <id column="ReminderID" property="reminderId"/>
+        <result column="UserID" property="userId"/>
+        <result column="Time" property="reminderTime"/>
+        <result column="Content" property="content"/>
+        <result column="IconClass" property="iconClass"/>
+        <result column="Completed" property="completed"/>
+        <result column="Important" property="important"/>
+        <result column="CreatedAt" property="createdAt"/>
+        <result column="UpdatedAt" property="updatedAt"/>
+    </resultMap>
+
+    <select id="getReminders" resultMap="ReminderMap">
+        SELECT * FROM Reminders WHERE UserID = #{userId} ORDER BY Important DESC, Time ASC
+    </select>
+
+    <insert id="addReminder" parameterType="cn.edu.tute.schoolproject.entity.Reminders">
+        INSERT INTO Reminders (UserID, Time, Content, IconClass, Completed, Important, CreatedAt, UpdatedAt)
+        VALUES (#{userId}, #{reminderTime}, #{content}, #{iconClass}, #{completed}, #{important}, #{createdAt}, #{updatedAt})
+        <selectKey resultType="int" keyProperty="reminderId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateReminder" parameterType="cn.edu.tute.schoolproject.entity.Reminders">
+        UPDATE Reminders
+        SET Time = #{reminderTime},
+            Content = #{content},
+            IconClass = #{iconClass},
+            Completed = #{completed},
+            Important = #{important},
+            UpdatedAt = #{updatedAt}
+        WHERE ReminderID = #{reminderId}
+    </update>
+
+    <delete id="deleteReminder">
+        DELETE FROM Reminders WHERE ReminderID = #{reminderId}
+    </delete>
+</mapper>

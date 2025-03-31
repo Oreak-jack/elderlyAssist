@@ -3,6 +3,7 @@ import axios from 'axios'
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_URL, // 从环境变量获取基础URL
   timeout: 5000,
+  withCredentials: true, // 允许跨域请求携带cookie
   headers: {
     'Content-Type': 'application/json'
   }
@@ -54,4 +55,4 @@ request.interceptors.response.use(
   }
 )
 
-export default request 
+export default request
