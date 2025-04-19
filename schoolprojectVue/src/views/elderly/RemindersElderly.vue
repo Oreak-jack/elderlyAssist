@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { getReminders, addReminder, deleteReminder, updateReminder } from '@/api/remindersApi'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   elderlyInfo: {
@@ -32,12 +33,14 @@ const formatTime = (isoTime) => {
 // 获取提醒列表
 const fetchReminders = async () => {
   try {
-    // console.log("执行到获取列表中了", props.elderlyInfo.userId)
-    const userId = props.elderlyInfo.userId // 从props中获取用户ID
+    console.log("开始获取提醒列表，用户ID:", props.elderlyInfo.userId)
+    const userId = props.elderlyInfo.userId
     const response = await getReminders(userId)
+    console.log("获取到的提醒列表:", response)
     reminders.value = response.data
   } catch (error) {
     console.error('获取提醒列表失败:', error)
+    ElMessage.error('获取提醒列表失败')
   }
 }
 
@@ -45,10 +48,20 @@ const fetchReminders = async () => {
 const handleAddReminder = async () => {
   try {
     if (!newReminder.value.reminderTime || !newReminder.value.content) {
-      alert('请填写完整的提醒信息')
+      ElMessage.warning('请填写完整的提醒信息')
       return
     }
 
+    // 添加日志
+    console.log('准备发送的数据：', newReminder.value)
+    
+    const response = await addReminder(newReminder.value)
+    console.log('服务器响应：', response)
+    
+    await fetchReminders()
+    showAddForm.value = false
+    ElMessage.success('添加成功')
+    
     // 将HH:mm格式转换为ISO格式
     const [hours, minutes] = newReminder.value.reminderTime.split(':')
     const hoursInt = parseInt(hours)
@@ -92,6 +105,7 @@ const handleAddReminder = async () => {
     }
   } catch (error) {
     console.error('添加提醒失败:', error)
+    ElMessage.error(`添加失败: ${error.message || '未知错误'}`)
   }
 }
 

@@ -16,7 +16,7 @@ const router = createRouter({
         {
             path:'/index',
             component:Index,
-            meta: { requiresAuth: false }, // 需要登录
+            meta: { requiresAuth: false }, // 不需要登录
             children:[
                 {
                     path:'',
@@ -43,7 +43,7 @@ const router = createRouter({
         {
             path:'/home',
             component: Home,
-            meta: { requiresAuth: false } // 需要登录
+            meta: { requiresAuth: true } // 需要登录
         },
         {
             path:'/test',

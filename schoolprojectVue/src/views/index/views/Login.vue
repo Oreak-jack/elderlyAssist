@@ -28,25 +28,33 @@ const handleLogin = async () => {
   }
   //  await 等 login 执行完毕后继续执行，下面的数据才不会出错
 
-
-
   try {
     const res = await login(loginData)
     if (!res) {
       alert('登录失败，请稍后重试')
       return
     }
-    response.value = res
     
     if (res.success) {
       // 保存用户信息到 userStore
       userStore.setUser(res.data)
       
+      // 显示登录成功消息
+      alert(res.message || '登录成功')
+      
+      console.log("用户类型:", res.data.userType)
+      
       // 根据用户类型跳转到不同页面
       if (res.data.userType === '老人') {
-        router.push('/elderly')
+        console.log("正在执行老人跳转")
+        setTimeout(() => {
+          router.push('/elderly')
+        }, 100)
       } else {
-        router.push('/family')
+        console.log("正在执行家人跳转")
+        setTimeout(() => {
+          router.push('/family')
+        }, 100)
       }
     } else {
       alert(res.message || '登录失败，请检查账号密码')
@@ -55,35 +63,9 @@ const handleLogin = async () => {
     console.error('登录错误：', error)
     alert('登录出错，请稍后重试')
   }
-
-
 }
-// 监视 response 的变化
-watch(response,(newResponse) => {
-  console.log("watch正在监视")
-  console.log('response 变化了：', newResponse);
-  alert(newResponse.message)
-  if (newResponse.success) {
 
-    // 保存用户信息到 userStore
-    userStore.setUser(newResponse.data)
-    console.log("接下来路由重定向",newResponse.data.userType);
-
-    // 根据用户类型跳转到不同页面
-    if (newResponse.data.userType === '老人') {
-      console.log("正在执行老人跳转")
-      // 这里要添加延时，不然的话路由反应太快没有办法正确登录！！！！！
-      setTimeout(() => {
-        router.push('/elderly')
-      }, 100)
-    } else{
-      console.log("正在执行家人跳转")
-      setTimeout(() => {
-        router.push('/family')
-      }, 100)
-    }
-  }
-})
+// 移除 watch 函数，避免重复的路由跳转逻辑
 </script>
 
 <template>
