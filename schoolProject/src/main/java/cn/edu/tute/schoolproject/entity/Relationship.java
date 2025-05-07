@@ -1,17 +1,17 @@
 package cn.edu.tute.schoolproject.entity;
 
 public class Relationship {
-    private Integer id;
-    private Integer userId;
-    private Integer reminderId;
+        private Integer id;
+        private Integer FamilyId;
+        private Integer OldId;
 
-    public Relationship() {
-    }
-
-    public Relationship(Integer id, Integer userId, Integer reminderId) {
-        this.id = id;
-        this.userId = userId;
-        this.reminderId = reminderId;
+    @Override
+    public String toString() {
+        return "Relationship{" +
+                "id=" + id +
+                ", FamilyId=" + FamilyId +
+                ", OldId=" + OldId +
+                '}';
     }
 
     public Integer getId() {
@@ -22,43 +22,28 @@ public class Relationship {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getFamilyId() {
+        return FamilyId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setFamilyId(Integer familyId) {
+        FamilyId = familyId;
     }
 
-    public Integer getReminderId() {
-        return reminderId;
+    public Integer getOldId() {
+        return OldId;
     }
 
-    public void setReminderId(Integer reminderId) {
-        this.reminderId = reminderId;
+    public void setOldId(Integer oldId) {
+        OldId = oldId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Relationship that = (Relationship) o;
-        return java.util.Objects.equals(id, that.id) &&
-                java.util.Objects.equals(userId, that.userId) &&
-                java.util.Objects.equals(reminderId, that.reminderId);
+    public Relationship(Integer id, Integer familyId, Integer oldId) {
+        this.id = id;
+        FamilyId = familyId;
+        OldId = oldId;
     }
 
-    @Override
-    public int hashCode() {
-        return java.util.Objects.hash(id, userId, reminderId);
-    }
-
-    @Override
-    public String toString() {
-        return "Relationship{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", reminderId=" + reminderId +
-                '}';
+    public Relationship() {
     }
 }

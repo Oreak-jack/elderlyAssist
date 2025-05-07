@@ -30,17 +30,17 @@ const handleLogin = async () => {
 
   try {
     const res = await login(loginData)
+    console.log(res.data)
     if (!res) {
       alert('登录失败，请稍后重试')
       return
     }
     
-    if (res.success) {
+    if (res.data.success) {
       // 保存用户信息到 userStore
-      userStore.setUser(res.data)
-      
+      userStore.setUser(res.data.data)
       // 显示登录成功消息
-      alert(res.message || '登录成功')
+      alert(res.data.message || '登录成功')
       
       console.log("用户类型:", res.data.userType)
       

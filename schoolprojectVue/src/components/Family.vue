@@ -18,30 +18,32 @@ interface FamilyUser extends User {
 
 const userStore = useUserStore()
 const familyInfo = ref<FamilyUser>({
-  UserID: 0,
-  UserName: '',
-  Password: '',
-  UserType: '家属',
-  PhoneNumber: '',
-  CreatedAt: new Date(),
-  Age: undefined,
-  Gender: undefined,
-  Email: '',
-  Address: '',
+  userId: 0,
+  userName: '',
+  password: '',
+  userType: '家属' as const,
+  phoneNumber: '',
+  createdAt: new Date(),
+  age: undefined,
+  gender: undefined,
+  email: '',
+  address: '',
   elderlyList: []
 })
 
 // 获取老人的健康数据
 const fetchElderlyHealthData = async (elderly: User) => {
   try {
-    const response = await getElderlyHealthData(elderly.UserID)
-    if (response.code === 200 && response.data) {
+    const response = await getElderlyHealthData(elderly.userId)
+    console.log('获取老人健康数据响应:', response)
+    
+    if (response.status === 200 && response.data) {
       return response.data
     }
   } catch (error) {
-    console.error(`获取老人${elderly.UserName}的健康数据失败:`, error)
+    console.error(`获取老人${elderly.userName}的健康数据失败:`, error)
   }
-  return null
+  return undefined
 }
 
 const fetchFamilyInfo = async () => {
@@ -49,9 +51,7 @@ const fetchFamilyInfo = async () => {
     const response = await getFamilyInfo()
     console.log('获取家属信息响应：', response)
 
-    //获取家属信息需要拿到 关系表 中的数据获取到 老人id 然后传入到 familyInfo 中
-
-    if (response.code === 200 && response.data) {
+    if (response.status === 200 && response.data) {
       // 获取每个老人的健康数据
       const elderlyList = await Promise.all(
         response.data.elderlyList.map(async (elderly) => ({
@@ -65,41 +65,52 @@ const fetchFamilyInfo = async () => {
         elderlyList
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('获取家属信息失败:', error)
-    ElMessage.error('获取家属信息失败')
+    if (error.message === '未获取到家属ID') {
+      ElMessage.error('请先登录')
+      // 可以添加重定向到登录页面
+      // router.push('/login')
+    } else {
+      ElMessage.error(error.message || '获取家属信息失败')
+    }
   }
 }
 
 onMounted(async () => {
-  userStore.initUserFromStorage()
-  const user = userStore.user
-  console.log('从 store 获取的用户信息:', user)
+  try {
+    userStore.initUserFromStorage()
+    const user = userStore.user
+    console.log('从 store 获取的用户信息:', user)
 
-  if (user && user.UserID) {  // 添加 UserID 检查
-    // 创建一个新的对象，避免响应式问题
-    const userInfo = {
-      UserID: Number(user.UserID),
-      UserName: String(user.UserName),
-      Password: String(user.Password),
-      UserType: String(user.UserType),
-      PhoneNumber: String(user.PhoneNumber || ''),
-      Email: String(user.Email || ''),
-      Address: String(user.Address || ''),
-      Age: user.Age ? Number(user.Age) : null,
-      Gender: user.Gender || null,
-      CreatedAt: new Date(user.CreatedAt),
-      elderlyList: []
+    if (user && user.userId) {
+      // 创建一个新的对象，避免响应式问题
+      const userInfo = {
+        userId: Number(user.userId),
+        userName: String(user.userName),
+        password: String(user.password),
+        userType: '家属' as const,
+        phoneNumber: String(user.phoneNumber || ''),
+        email: String(user.email || ''),
+        address: String(user.address || ''),
+        age: user.age ? Number(user.age) : null,
+        gender: user.gender || null,
+        createdAt: new Date(user.createdAt),
+        elderlyList: []
+      }
+      
+      console.log('准备设置的用户信息:', userInfo)
+      familyInfo.value = userInfo
+      
+      await fetchFamilyInfo()
+    } else {
+      ElMessage.error('未获取到有效的用户信息，请重新登录')
+      // 可以添加重定向到登录页面
+      // router.push('/login')
     }
-    
-    console.log('准备设置的用户信息:', userInfo)
-    familyInfo.value = userInfo
-    
-    await fetchFamilyInfo()
-  } else {
-    ElMessage.error('未获取到有效的用户信息，请重新登录')
-    // 可以添加重定向到登录页面
-    // router.push('/login')
+  } catch (error: any) {
+    console.error('初始化家属页面失败:', error)
+    ElMessage.error(error.message || '初始化家属页面失败')
   }
 })
 
@@ -123,42 +134,42 @@ const getBloodOxygenStatus = (bloodOxygen: number) => {
   <div class="family-container">
     <h1>家属主页</h1>
     <FamilyInfo :family-info="familyInfo" />
-    <AddOld :family-id="familyInfo.UserID" @update:elderly-list="fetchFamilyInfo">
+    <AddOld :family-id="familyInfo.userId" @update:elderly-list="fetchFamilyInfo">
       <div v-if="familyInfo.elderlyList?.length === 0" class="empty-list">
         暂无关联老人
       </div>
       <div v-else class="elderly-list">
-        <div v-for="elderly in familyInfo.elderlyList" :key="elderly.UserID" class="elderly-item">
+        <div v-for="elderly in familyInfo.elderlyList" :key="elderly.userId" class="elderly-item">
           <div class="elderly-basic-info">
-            <span class="elderly-name">{{ elderly.UserName }}</span>
-            <span class="elderly-age">{{ elderly.Age || '未知' }}岁</span>
+            <span class="elderly-name">{{ elderly.userName }}</span>
+            <span class="elderly-age">{{ elderly.age || '未知' }}岁</span>
           </div>
           <div class="elderly-health-info" v-if="elderly.healthData">
             <div class="health-item">
               <span class="label">心率:</span>
-              <span :class="['value', getHeartRateStatus(elderly.healthData.heartRate).class]">
-                {{ elderly.healthData.heartRate }} 
-                ({{ getHeartRateStatus(elderly.healthData.heartRate).text }})
+              <span :class="['value', getHeartRateStatus(elderly.healthData.heart_rate).class]">
+                {{ elderly.healthData.heart_rate }} 
+                ({{ getHeartRateStatus(elderly.healthData.heart_rate).text }})
               </span>
             </div>
             <div class="health-item">
               <span class="label">步数:</span>
-              <span class="value">{{ elderly.healthData.stepCount || 0 }}</span>
+              <span class="value">{{ elderly.healthData.step_count || 0 }}</span>
             </div>
             <div class="health-item">
               <span class="label">睡眠:</span>
-              <span class="value">{{ elderly.healthData.sleepDuration || 0 }}小时</span>
+              <span class="value">{{ elderly.healthData.sleep_duration || 0 }}小时</span>
             </div>
             <div class="health-item">
               <span class="label">血氧:</span>
-              <span :class="['value', getBloodOxygenStatus(elderly.healthData.bloodOxygen).class]">
-                {{ elderly.healthData.bloodOxygen }}% 
-                ({{ getBloodOxygenStatus(elderly.healthData.bloodOxygen).text }})
+              <span :class="['value', getBloodOxygenStatus(elderly.healthData.blood_oxygen).class]">
+                {{ elderly.healthData.blood_oxygen }}% 
+                ({{ getBloodOxygenStatus(elderly.healthData.blood_oxygen).text }})
               </span>
             </div>
             <div class="health-item">
               <span class="label">更新时间:</span>
-              <span class="value">{{ new Date(elderly.healthData.recordedAt).toLocaleString() }}</span>
+              <span class="value">{{ new Date(elderly.healthData.recorded_at).toLocaleString() }}</span>
             </div>
           </div>
           <div v-else class="no-health-data">

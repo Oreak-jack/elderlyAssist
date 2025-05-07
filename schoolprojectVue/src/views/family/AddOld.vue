@@ -20,11 +20,13 @@ const showBindDialog = async () => {
   try {
     loading.value = true
     const response = await getAvailableElderly()
-    if (response.code === 200 && response.data) {
+    console.log('获取可绑定老人列表响应:', response)
+    
+    if (response.status === 200) {
       availableElderly.value = response.data
       dialogVisible.value = true
     } else {
-      ElMessage.warning(response.message || '获取可绑定老人列表失败')
+      ElMessage.warning('获取可绑定老人列表失败')
     }
   } catch (error) {
     console.error('获取可绑定老人列表失败:', error)
@@ -44,13 +46,15 @@ const handleBindElderly = async () => {
   try {
     loading.value = true
     const response = await bindElderly(selectedElderly.value, props.familyId)
-    if (response.code === 200) {
+    console.log('绑定老人响应:', response)
+    
+    if (response.status === 200) {
       ElMessage.success('绑定成功')
       dialogVisible.value = false
       selectedElderly.value = null
       emit('update:elderlyList')
     } else {
-      ElMessage.warning(response.message || '绑定失败')
+      ElMessage.warning('绑定失败')
     }
   } catch (error) {
     console.error('绑定失败:', error)
@@ -89,9 +93,9 @@ const handleBindElderly = async () => {
       >
         <el-option
           v-for="elderly in availableElderly"
-          :key="elderly.UserID"
-          :label="elderly.UserName"
-          :value="elderly.UserID"
+          :key="elderly.userId"
+          :label="elderly.userName"
+          :value="elderly.userId"
         />
       </el-select>
       <template #footer>

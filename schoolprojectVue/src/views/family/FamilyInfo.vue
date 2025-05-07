@@ -16,27 +16,27 @@ onMounted(() => {
     <h2>个人信息</h2>
     <div class="info-item">
       <label>姓名：</label>
-      <span>{{ familyInfo.UserName || '未设置' }}</span>
+      <span>{{ familyInfo.userName || '未设置' }}</span>
     </div>
     <div class="info-item">
       <label>年龄：</label>
-      <span>{{ familyInfo.Age ? `${familyInfo.Age}岁` : '未设置' }}</span>
+      <span>{{ familyInfo.age ? `${familyInfo.age}岁` : '未设置' }}</span>
     </div>
     <div class="info-item">
       <label>性别：</label>
-      <span>{{ familyInfo.Gender || '未设置' }}</span>
+      <span>{{ familyInfo.gender || '未设置' }}</span>
     </div>
     <div class="info-item">
       <label>联系电话：</label>
-      <span>{{ familyInfo.PhoneNumber || '未设置' }}</span>
+      <span>{{ familyInfo.phoneNumber || '未设置' }}</span>
     </div>
     <div class="info-item">
       <label>邮箱：</label>
-      <span>{{ familyInfo.Email || '未设置' }}</span>
+      <span>{{ familyInfo.email || '未设置' }}</span>
     </div>
     <div class="info-item">
       <label>地址：</label>
-      <span>{{ familyInfo.Address || '未设置' }}</span>
+      <span>{{ familyInfo.address || '未设置' }}</span>
     </div>
   </div>
 </template>

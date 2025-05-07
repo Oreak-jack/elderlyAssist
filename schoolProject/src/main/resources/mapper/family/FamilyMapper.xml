@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tute.schoolproject.mapper.family.FamilyMapper">
+    
+    <resultMap id="BaseResultMap" type="cn.edu.tute.schoolproject.entity.Relationship">
+        <id column="id" property="id"/>
+        <result column="FamilyId" property="FamilyId"/>
+        <result column="OldId" property="OldId"/>
+    </resultMap>
+
+    <resultMap id="ElderlyResultMap" type="cn.edu.tute.schoolproject.entity.Users">
+        <id column="UserID" property="userId"/>
+        <result column="UserName" property="userName"/>
+        <result column="Password" property="password"/>
+        <result column="UserType" property="userType"/>
+        <result column="Age" property="age"/>
+        <result column="Gender" property="gender"/>
+        <result column="PhoneNumber" property="phoneNumber"/>
+        <result column="Email" property="email"/>
+        <result column="Address" property="address"/>
+        <result column="CreatedAt" property="createdAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getFamilyInfo" resultMap="BaseResultMap">
+        SELECT * FROM relationship WHERE FamilyId = #{familyId}
+    </select>
+
+    <select id="getAvailableElderly" resultMap="ElderlyResultMap">
+        <![CDATA[
+        SELECT 
+            UserID,
+            UserName,
+            Password,
+            UserType,
+            Age,
+            Gender,
+            PhoneNumber,
+            Email,
+            Address,
+            CreatedAt
+        FROM Users 
+        WHERE UserType = '老人' 
+        AND UserID NOT IN (
+            SELECT OldId 
+            FROM relationship
+        )
+        ]]>
+    </select>
+
+    <insert id="bindElderly">
+        INSERT INTO relationship (FamilyId, OldId)
+        VALUES (#{familyId}, #{elderlyId})
+    </insert>
+
+</mapper> 

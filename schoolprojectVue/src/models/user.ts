@@ -1,12 +1,12 @@
 export interface User {
-    UserID: number;
-    UserName: string;
-    Password: string;
-    UserType: '家属' | '老人';
-    PhoneNumber?: string;
-    Email?: string;
-    Address?: string;
-    Age?: number | null;
-    Gender?: '男' | '女' | null;
-    CreatedAt: Date;
+    userId: number;
+    userName: string;
+    password: string;
+    userType: '家属' | '老人';
+    phoneNumber?: string;
+    email?: string;
+    address?: string;
+    age?: number | null;
+    gender?: '男' | '女' | null;
+    createdAt: Date;
 }
